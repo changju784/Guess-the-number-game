@@ -30,8 +30,8 @@ module lfsr (clk,reset,out);
 always @(posedge clk, posedge reset)
   begin
     if (reset)
-      out = 7'b0000000;
+      out = 6'b000000;
     else
-      out = {out[5:0],feedback};
+      out = {out[4:0],feedback};
   end
 endmodule
