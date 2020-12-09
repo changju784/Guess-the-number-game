@@ -22,7 +22,7 @@
 module lfsr_tb();
 reg clk_tb;
 reg rst_tb;
-wire [3:0] out_tb;
+    wire [5:0] out_tb;
 
 initial
 begin
