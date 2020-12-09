@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2020/12/09 06:44:06
+// Create Date: 2020/12/09 06:42:33
 // Design Name: 
-// Module Name: lfsr_tb
+// Module Name: lsfr
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,27 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module lfsr_tb();
-reg clk_tb;
-reg rst_tb;
-wire [6:0] out_tb;
+module lfsr (clk,reset,NEWGAME,out);
+  input clk, reset, NEWGAME;
+  output reg [6:0] out;
+  wire feedback;
+  
+assign feedback = ~(out[6] ^ out[5]);
 
-initial
-begin
-    clk_tb = 0;
-    rst_tb = 1;
-    #15;
-    
-    rst_tb = 0;
-    #200;
-end
-
-always
-begin
-    #5;
-    clk_tb = ~ clk_tb;
-end
-
-lfsr DUT(clk_tb,rst_tb,out_tb);
-
+always @(posedge clk)
+  begin
+    if (reset==0 || NEWGAME == 1)
+      out = {out[5:0],feedback};
+  end
 endmodule
