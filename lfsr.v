@@ -22,16 +22,16 @@
 
 module lfsr (clk,reset,out);
   input clk, reset;
-  output reg [6:0] out;
+  output reg [5:0] out;
   wire feedback;
   
-assign feedback = ~(out[6] ^ out[5]);
+  assign feedback = ~(out[5] ^ out[4]);
 
 always @(posedge clk, posedge reset)
   begin
     if (reset)
       out = 7'b0000000;
     else
-      out = {out[6:0],feedback};
+      out = {out[5:0],feedback};
   end
 endmodule
