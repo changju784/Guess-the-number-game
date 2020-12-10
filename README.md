@@ -1,8 +1,11 @@
 Guess The Number
 
 Jungin Chang
+
 Minseok Sakong
+
 Paige Hartley
+
 Alex Hureaux-Perron
 
 We made a simple guess-the-number game, primarily run through the 7 segment with some VGA output based on user input (numbers 1-6). It works for the most part, though we had trouble displaying player one and player two's total scores.
