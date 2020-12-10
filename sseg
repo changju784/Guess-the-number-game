@@ -1,0 +1,91 @@
+module sseg(
+input clk,
+input reset,
+input [3:0] diceroll, p1d1, p1d2, p2d1, p2d2,
+output [6:0] an,
+output a, b, c, d, e, f, g
+);
+
+localparam N = 18;
+reg [N-1:0] count;
+reg [6:0] sseg; //final sseg output
+reg [6:0]an_temp; //keeps track of anodes for different output values to sseg
+
+always@(posedge clk or posedge reset)
+ begin
+  if (reset)
+   count <= 0;
+  else
+   count <= count + 1;
+ end
+
+always @(*)
+ begin
+   case(count[N-1:N-3])
+   
+   3'b000:
+    begin
+     sseg = diceroll;
+     an_temp = 7'b1111110;
+    end
+    
+   3'b001:
+    begin
+     sseg = p1d2;
+     an_temp = 7'b1111101;
+    end
+     
+   3'b010:
+    begin
+     sseg = p1d1;
+     an_temp = 7'b1111011;
+    end
+    
+//   3'b011:
+//    begin
+//     sseg = sumd2;
+//     an_temp = 7'b1110111;
+//    end
+    
+//   3'b100:
+//    begin
+//     sseg = sumd1;
+//     an_temp = 7'b1101111;
+//    end
+    
+   3'b101:
+    begin
+     sseg = p2d2;
+     an_temp = 7'b1011111;
+    end
+    
+   3'b110:
+    begin
+     sseg = p2d1;
+     an_temp = 7'b0111111;
+    end
+    
+   endcase
+  end
+  assign an = an_temp;
+  reg [6:0] sseg_temp; 
+  
+always @ (*)
+ begin
+  case(sseg)
+   4'b0000 : sseg_temp = 7'b1000000;
+   4'b0001 : sseg_temp = 7'b1111001;
+   4'b0010 : sseg_temp = 7'b0100100;
+   4'b0011 : sseg_temp = 7'b0110000;
+   4'b0100 : sseg_temp = 7'b0011001;
+   4'b0101 : sseg_temp = 7'b0010010;
+   4'b0110 : sseg_temp = 7'b0000010;
+   4'b0111 : sseg_temp = 7'b1111000;
+   4'b1000 : sseg_temp = 7'b0000000;
+   4'b1001 : sseg_temp = 7'b0010000;
+   default : sseg_temp = 7'b0111111; //dash
+  endcase
+ end
+assign {g, f, e, d, c, b, a} = sseg_temp;
+
+endmodule
