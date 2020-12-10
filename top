@@ -1,0 +1,27 @@
+`timescale 1ns / 1ps
+
+module top(
+input clk,
+input reset,
+input new_game,
+input roll,
+input [2:0] playerinput,
+output [6:0] an,
+output a, b, c, d, e, f, g,
+output P1, P2,
+output [15:0] winner
+);
+wire [5:0] lfsr_result;
+wire [3:0] diceroll, p1d1, p1d2, p2d1, p2d2;
+wire [3:0] ones_p1, tens_p1, ones_p2, tens_p2;
+wire [7:0] PS1, PS2;
+
+lfsr lfs(.clk(clk), .reset(reset), .out(lfsr_result));
+
+guess_userinput gui(.reset(reset), .clk(clk), .new_game(new_game), .roll(roll), .playerinput(playerinput), .P1(P1), .P2(P2), .winner(winner), .PS1(PS1), .PS2(PS2), .diceroll(diceroll));
+
+bin2dec b2d(.PS1(PS1), .PS2(PS2), .clk(clk), .ones_p1(ones_p1), .tens_p1(tens_p1), .ones_p2(ones_p2), .tens_p2(tens_p2));
+
+sseg ss(.clk(clk), .reset(reset), .diceroll(diceroll), .p1d1(tens_p1), .p1d2(ones_p1), .p2d1(tens_p2), .p2d2(ones_p2), .an(an), .a(a), .b(b), .c(c), .d(d), .e(e), .f(f), .g(g));
+
+endmodule
