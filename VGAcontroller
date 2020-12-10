@@ -1,0 +1,46 @@
+`timescale 1ns / 1ps
+
+module vgacontroller(
+    input clk,
+    input reset,
+
+    output Hsynq,
+    output Vsynq,
+    output reg [11:0] color
+   
+    );
+wire [2:0] shape = 3'b110; 
+wire clk_25M;
+wire enable_V_Counter;
+wire [15:0] H_Count_Value;
+wire [15:0] V_Count_Value;
+
+clock_divider VGA_Clock_gen (clk, clk_25M);
+horizontal_counter VGA_Horiz (clk_25M, enable_V_Counter, H_Count_Value);
+vertical_counter VGA_Verti (clk_25M, enable_V_Counter, V_Count_Value);
+
+//out
+assign Hsynq = (H_Count_Value < 96) ? 1'b1:1'b0;
+assign Vsynq = (V_Count_Value < 2) ? 1'b1:1'b0;
+
+//// pixel check if false then black
+always @(H_Count_Value or V_Count_Value)
+begin
+//shape 0
+color <= ((H_Count_Value < 300 && H_Count_Value > 290 && V_Count_Value < 280 && V_Count_Value > 200) || (H_Count_Value < 340 && H_Count_Value > 330 && V_Count_Value < 280 && V_Count_Value > 200) || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 290 && V_Count_Value > 280) || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 200 && V_Count_Value > 190) && shape==0)? 12'hFFF:12'h000;
+//shape 1
+color <= ((H_Count_Value < 335 && H_Count_Value > 320 && V_Count_Value < 230 && V_Count_Value > 220) || (H_Count_Value < 340 && H_Count_Value > 330 && V_Count_Value < 280 && V_Count_Value > 210) || (H_Count_Value < 351 && H_Count_Value > 315 && V_Count_Value < 280 && V_Count_Value > 270)&& shape==3'b001)? 12'hFFF:12'h000;
+//shape 2
+color <= ((H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 290 && V_Count_Value > 280) || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 320 && V_Count_Value > 310)  || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 350 && V_Count_Value > 340) || (H_Count_Value < 330 && H_Count_Value > 322 && V_Count_Value < 308 && V_Count_Value > 280) || (H_Count_Value < 308 && H_Count_Value > 300 && V_Count_Value < 345 && V_Count_Value > 310) && shape==3'b010)? 12'hFFF:12'h000;
+//shape 3
+color <= ((H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 290 && V_Count_Value > 280) || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 320 && V_Count_Value > 310)  || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 350 && V_Count_Value > 340) || (H_Count_Value < 330 && H_Count_Value > 322 && V_Count_Value < 345 && V_Count_Value > 280)  && shape==3'b011) ? 12'hFFF:12'h000;
+//shape 4
+color <= ((H_Count_Value < 330 && H_Count_Value > 322 && V_Count_Value < 345 && V_Count_Value > 280)  || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 320 && V_Count_Value > 310) || (H_Count_Value < 308 && H_Count_Value > 300 && V_Count_Value < 312 && V_Count_Value > 280)&& shape==3'b100) ? 12'hFFF:12'h000;
+//shape 5
+color <= ((H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 290 && V_Count_Value > 280) || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 320 && V_Count_Value > 310)  || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 350 && V_Count_Value > 340) || (H_Count_Value < 330 && H_Count_Value > 322 && V_Count_Value < 345 && V_Count_Value > 310) || (H_Count_Value < 308 && H_Count_Value > 300 && V_Count_Value < 310 && V_Count_Value > 280) && shape==3'b101)? 12'hFFF:12'h000;
+//shape 6
+color <= ((H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 320 && V_Count_Value > 310)  || (H_Count_Value < 330 && H_Count_Value > 300 && V_Count_Value < 350 && V_Count_Value > 340) || (H_Count_Value < 330 && H_Count_Value > 322 && V_Count_Value < 345 && V_Count_Value > 310) || (H_Count_Value < 308 && H_Count_Value > 300 && V_Count_Value < 310 && V_Count_Value > 280)  || (H_Count_Value < 308 && H_Count_Value > 300 && V_Count_Value < 350 && V_Count_Value > 290)&& shape==3'b110)? 12'hFFF:12'h000;
+
+
+end  //always@ end
+endmodule
